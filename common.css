@@ -1,0 +1,16 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+.first {
+    padding: 10px;
+    background: #c0c;
+}
+.last {
+    padding: 10px;
+    background: #ddd465;
+}
+li {
+    margin: 10px;
+    background: #ccc;
+}

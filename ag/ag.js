@@ -12,7 +12,6 @@ class AngactDom {
 
     render() {
         this.real.innerHTML = '';
-
         this.real.appendChild(document.importNode(this.compileTemplate.content, true))
     }
 
@@ -20,8 +19,7 @@ class AngactDom {
         let {template} = this;
 
         this.maskScope.forEach((keyScope) => {
-            let revertArray = keyScope.split('-') || [];
-            if (revertArray[0] === 'ag') {
+            if (~keyScope.indexOf('ag-')) {
                 if (this.scope[keyScope]) {
                     angact.agAttrs[keyScope](this.scope[keyScope], this);
                 }
@@ -83,7 +81,12 @@ class Angact {
                 Object.defineProperty(scope, key, {
                     set: function (val) {
                         component.$$scope[key] = val ? val.value ? val.value : val : '';
-                        angactNode.update();
+                        if(angactNode.t) {
+                            clearTimeout(angactNode.t);
+                        }
+                        angactNode.t = window.setTimeout(function () {
+                            angactNode.update();
+                        })
                     },
                     get: function () {
                         return component.$$scope[key] ? component.$$scope[key].value ? component.$$scope[key].value : component.$$scope[key] : '';

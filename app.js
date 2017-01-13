@@ -34,7 +34,7 @@ angact.component('news', function () {
             item: '='
         },
         link: function (scope) {
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 100; i++) {
                 scope.item += '<news-item ag-click="click" title="news ' + i + '" description="description ' + i + '"></news-item>';
             }
         }

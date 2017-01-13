@@ -1,51 +1,61 @@
-angact.component('myFirstComponent', function () {
+angact.component('menu', function () {
     return {
-        template: '<div style="{{styleString}}" class="{{className}}">' +
-        '<my-button model="{{data}}" ag-click="click"></my-button>' +
-        '</div>',
+        template: '<ul>{{item}}</ul>',
         scope: {
-            model: '=',
-            data: '=',
-            styleString: '=',
-            className: '=',
-            click: '@'
+            item: '='
         },
         link: function (scope) {
-            setTimeout(function () {
-                scope.styleString = 'margin-top: 0px';
-                scope.data = 'data';
-            }, 3000);
-            var j = 0;
-            scope.click = function (event) {
-                event.stopPropagation();                
-                scope.data = 'data' + j++;
+            for (var i = 0; i < 5; i++) {
+                scope.item += '<menu-item ag-click="click" title="Item ' + i + '"></menu-item>';
             }
         }
     }
 });
-angact.component('myButton', function () {
+
+angact.component('menuItem', function () {
     return {
-        template: '<ul>' +
-        '<li>{{title}} - {{label}}</li>' +
-        '</ul>',
+        template: '<li class="{{active}}">{{title}}</li>',
         scope: {
             title: '=',
-            label: '=',
-            model: '=',
-            click: '@'
+            click: '=',
+            active: '='
         },
         link: function (scope) {
-            var i = 1;
-            scope.title = '000';
-            scope.label = 'Кликнули ' + scope.model;
-            scope.click = function (e) {
-                e.stopPropagation();
-                scope.title = 'Кликнули ' + i + ' - ' + scope.model;
-                i++;
+            scope.click = function () {
+                scope.active = scope.active ? '' : 'active';
             }
         }
     }
 });
+angact.component('news', function () {
+    return {
+        template: '<div>{{item}}</div>',
+        scope: {
+            item: '='
+        },
+        link: function (scope) {
+            for (var i = 0; i < 5; i++) {
+                scope.item += '<news-item ag-click="click" title="news ' + i + '" description="description ' + i + '"></news-item>';
+            }
+        }
+    }
+});
+angact.component('newsItem', function () {
+    return {
+        template: '<div class="news-item">' +
+        '<div class="title">{{title}}</div' +
+        '><div class="description">{{description}}</div>' +
+        '</div>',
+        scope: {
+            title: '=',
+            click: '=',
+            description: '='
+        },
+        link: function (scope) {
+        }
+    }
+});
+
 angact.agAttr('agClick', function (name, context) {
     context.real.addEventListener('click', context.scope[name])
 });

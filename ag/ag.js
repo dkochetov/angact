@@ -6,11 +6,14 @@ class AngactDom {
         this.compileTemplate = '';
         this.real = real;
         this.child = [];
+        this.compileTemplate = document.createElement('template');
         contx.push(this);
     }
 
     render() {
-        this.real.innerHTML = this.compileTemplate;
+        this.real.innerHTML = '';
+
+        this.real.appendChild(document.importNode(this.compileTemplate.content, true))
     }
 
     update() {
@@ -27,7 +30,9 @@ class AngactDom {
             let replaceData = this.scope[keyScope] ? this.scope[keyScope].value ? this.scope[keyScope].value : this.scope[keyScope] : '';
             template = template.split('{{' + keyScope + '}}').join(replaceData);
         });
-        this.compileTemplate = template;
+
+        this.compileTemplate.innerHTML = template;
+
         this.render();
         for (let i = 0; i < this.real.childNodes.length; i++) {
             angact._whiteRabbit(this.real.childNodes[i], this.child)

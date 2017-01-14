@@ -11,8 +11,11 @@ class AngactDom {
     }
 
     render() {
-        this.real.innerHTML = '';
-        this.real.appendChild(document.importNode(this.compileTemplate.content, true))
+        if(!!this.real.firstChild) {
+            this.real.replaceChild(document.importNode(this.compileTemplate.content, true), this.real.firstChild);
+        } else {
+            this.real.appendChild(document.importNode(this.compileTemplate.content, true));
+        }
     }
 
     update() {
@@ -99,8 +102,9 @@ class Angact {
             scope = contx[i].scope;
             contx[i].real = node.real;
             contx[i].maskScope.forEach(function (key) {
-                if (node.real.attributes[key]) {
-                    scope[key] = node.real.attributes[key] ? node.real.attributes[key].value : '';
+                const attr = node.real.attributes[key];
+                if (!!attr) {
+                    scope[key] = attr ? attr.value : '';
                 }
             });
             contx[i].update();
@@ -114,11 +118,14 @@ class Angact {
         }
         let childNodes = node.childNodes;
         for (let i = 0; i < childNodes.length; i++) {
-            if (this.components[childNodes[i].localName]) {
+            const childNode = childNodes[i];
+            const {localName} = childNode;
+            const component = this.components[localName];
+            if (component) {
                 this._createDom({
-                    name: childNodes[i].localName,
-                    real: childNodes[i],
-                    core: this.components[childNodes[i].localName],
+                    name: localName,
+                    real: childNode,
+                    core: component,
                     child: []
                 }, contx, i)
             }
